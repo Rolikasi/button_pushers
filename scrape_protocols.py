@@ -65,7 +65,7 @@ for idx, url in enumerate(urls):
 
 #%%
 #clean no_deps columns
-cols = ['title', 'date', 'no_deps', 'url', '0 Зарегистрировались', '0 перерыв',
+cols = ['title', 'date', 'count_no_deps', 'no_deps', 'url', '0 Зарегистрировались', '0 перерыв',
        '1 Зарегистрировались', '1 перерыв', '2 Зарегистрировались',
         '2 перерыв', '3 Зарегистрировались',
        '4 Зарегистрировались', '5 Зарегистрировались', '6 Зарегистрировались']
@@ -74,12 +74,15 @@ replacement = {
     "На заседании отсутствуют депутаты": "",
     "На заседании отсутствует депутат": "",
     "На внеочередном заседании отсутствуют депутаты": "",
-    "\r\n": "",
+    "\r\n": " ",
+    "культурного наследия», «О телевидении": "культурного наследия»; «О телевидении",
     ":": ""
 }
 
 df_deps_buttons = pd.DataFrame(res)
 df_deps_buttons.no_deps = df_deps_buttons.no_deps.replace(replacement, regex=True).str.strip()
+df_deps_buttons['count_no_deps'] = df_deps_buttons.no_deps.str.split(', ').str.len()
+df_deps_buttons.loc[df_deps_buttons.no_deps == 'Все присутствовали', 'count_no_deps'] = 0
 df_deps_buttons[cols].to_csv('protocol_6_kenesh.csv')
 
 #%%

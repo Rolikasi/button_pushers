@@ -91,9 +91,15 @@ df_deps.to_dep = df_deps.to_dep.replace(to_dep_replace)
 # %%
 # export deps files
 for column in ['no_dep', 'miss_dep', 'from_dep', 'to_dep']:
-    df_deps[column].value_counts().rename_axis(column).to_frame('counts').to_csv('export/' + column +'.csv')
+    df_deps[column].value_counts().rename_axis('dep').to_frame(column).to_csv('export/' + column +'.csv')
 df_deps[['protocol_id', 'title', 'date', 'url', 'count_no_deps', 'no_dep',
        'miss_dep', 'from_dep', 'to_dep']].to_csv('export/exploded_no_deps.csv')
+
+concat_dfs = []
+for name in ['no_dep', 'miss_dep', 'from_dep']:
+    concat_dfs.append(pd.read_csv('export/' + name +'.csv', index_col='dep'))
+
+pd.concat(concat_dfs, axis=1).to_csv('export/miss_no_from_dep.csv')
 
 
 # %%
@@ -129,8 +135,5 @@ df_regs.sort_values('first_reg').head(10)[reg_cols].to_csv('export/first_reg_top
 df_regs.sort_values('last_reg').head(10)[reg_cols].to_csv('export/last_reg_top_10_min.csv')
 df_regs.sort_values('first_reg', ascending=False, na_position='last').head(10)[reg_cols].to_csv('export/first_reg_top_10_max.csv')
 df_regs.sort_values('last_reg', ascending=False, na_position='last').head(10)[reg_cols].to_csv('export/last_reg_top_10_max.csv')
-
-# %%
-
 
 # %%

@@ -10,7 +10,7 @@ def get_protocol_info(page, url):
     title = soup.find('div', {'class', 'title'}).text.strip().lower()
     date = "".join(re.findall(r'от\s+([\d.]*)', title)[0])
     text = soup.find('div', {'class', 'text'})
-    registrations = text.find_all(lambda tag:tag.name=="p" and "Зарегистрировались" in tag.text)
+    registrations = text.find_all(lambda tag:tag.name=="p" and "Зарегистрировал" in tag.text)
     count_deps_regs = [{str(idx) + ' Зарегистрировались' : get_number(registration)} for idx, registration in enumerate(registrations)]
     count_deps = dict((key,d[key]) for d in count_deps_regs for key in d)
     breaks = text.find_all(lambda tag:tag.name=="p" and "Объявляется перерыв" in tag.text)
@@ -53,6 +53,7 @@ page_num = 31
 
 
 urls = [get_all_links(search_link + str(number+1), slice_link) for number in range(page_num)]
+urls = [url for sublist in urls for url in sublist]
 
 #%%
 #get info from protocols
@@ -83,6 +84,6 @@ df_deps_buttons = pd.DataFrame(res)
 df_deps_buttons.no_deps = df_deps_buttons.no_deps.replace(replacement, regex=True).str.strip()
 df_deps_buttons['count_no_deps'] = df_deps_buttons.no_deps.str.split(', ').str.len()
 df_deps_buttons.loc[df_deps_buttons.no_deps == 'Все присутствовали', 'count_no_deps'] = 0
-df_deps_buttons[cols].to_csv('protocol_6_kenesh.csv')
+df_deps_buttons[cols].to_csv('scraped_protocol_6_kenesh.csv')
 
-#%%
+# %%

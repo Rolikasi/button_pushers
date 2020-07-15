@@ -113,10 +113,10 @@ df_deps[['protocol_id', 'title', 'date', 'url', 'count_no_deps', 'no_dep',
        'miss_dep', 'from_dep', 'to_dep']].to_csv('export/exploded_no_deps.csv')
 
 concat_dfs = []
-for name in ['no_dep', 'miss_dep', 'from_dep']:
+for name in ['no_dep', 'miss_dep', 'from_dep', 'to_dep']:
     concat_dfs.append(pd.read_csv('export/' + name +'.csv', index_col='dep'))
 
-pd.concat(concat_dfs, axis=1).to_csv('export/miss_no_from_dep.csv')
+pd.concat(concat_dfs, axis=1).to_csv('export/miss_no_from_to_dep.csv')
 
 
 # %%
@@ -161,5 +161,6 @@ df_deps.groupby(['from_dep', 'to_dep']).size().reset_index().rename(columns={0:'
 df_deps[df_deps.to_dep.notnull()][['from_dep', 'to_dep']].to_csv('export/raw_from_to_dep.csv', index=False)
 # %%
 df_deps.no_dep.unique()
+
 
 # %%

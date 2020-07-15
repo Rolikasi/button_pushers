@@ -137,3 +137,6 @@ df_regs.sort_values('first_reg', ascending=False, na_position='last').head(10)[r
 df_regs.sort_values('last_reg', ascending=False, na_position='last').head(10)[reg_cols].to_csv('export/last_reg_top_10_max.csv')
 
 # %%
+df_deps.groupby(['from_dep', 'to_dep']).size().reset_index().rename(columns={0:''}).sort_values('', ascending=False).to_csv('export/from_to_dep_pairs.csv', index=False)
+
+# %%

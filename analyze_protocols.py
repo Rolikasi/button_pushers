@@ -56,6 +56,7 @@ name_replace = {'Алимбеков Н.': 'Алимбеков Н.К.',
  'Маматов А.': 'Маматов А.М.',
  'Сурабалдиева Э.К.': 'Сурабалдиева Э.Ж.',
  'Бакчиев Дж.А.': 'Бакчиев Ж.А.',
+ 'Байбакпаев Э.Дж.': 'Байбакпаев Э.Ж.',
  'Бакчиев А.Дж.': 'Бакчиев Ж.А.',
  'Бакчиеву Дж.А.': 'Бакчиеву Ж.А.',
  'Бакчиеву А.Дж.': 'Бакчиеву Ж.А.',
@@ -76,18 +77,34 @@ to_dep_replace = {
  'Сулайманов А.Т.': 'Сулайманову А.Т.',
  'Бекешову Д.Д.': 'Бекешеву Д.Д.',
  'Байбакпаеву Э.Дж.': 'Байбакпаеву Э.Ж.',
+ 'Бакчиеву Дж.А.': 'Бакчиеву Ж.А.',
+ 'Бакчиеву А.Дж.': 'Бакчиеву Ж.А.',
  'Айдарову А.С.': 'Айдарову С.А.',
  'Шарипову З.Э.': 'Шарапову З.Э.',
  'Зулушеву К.А.': 'Зулушеву К.Т.',
  'Сыдыкову Б.С.': 'Сыдыкову Б.У.',
  'Сабирову А.С.': 'Сабирову М.Э.',
- 'бабанову О.Т.': 'Бабанову О.Т.'
+ 'бабанову О.Т.': 'Бабанову О.Т.',
+ 'Маматову А.': 'Маматов А.М.',
 }
+
+name_repls = {
+    'ову' : 'ов',
+    'еву' : 'ев',
+    'евой' : 'ева',
+    'овой' : 'ова',
+    'иной' : 'ина',
+    'Алтынбеку' : 'Алтынбек',
+    'Адылу' : 'Адыл'
+}
+#df_deps.to_dep.replace(name_repls,regex=True)
+
 
 df_deps.no_dep = df_deps.no_dep.replace(name_replace)
 df_deps.from_dep = df_deps.from_dep.replace(name_replace)
 df_deps.miss_dep = df_deps.miss_dep.replace(name_replace)
 df_deps.to_dep = df_deps.to_dep.replace(to_dep_replace)
+df_deps.to_dep = df_deps.to_dep.replace(name_repls, regex=True)
 # %%
 # export deps files
 for column in ['no_dep', 'miss_dep', 'from_dep', 'to_dep']:
@@ -138,5 +155,11 @@ df_regs.sort_values('last_reg', ascending=False, na_position='last').head(10)[re
 
 # %%
 df_deps.groupby(['from_dep', 'to_dep']).size().reset_index().rename(columns={0:''}).sort_values('', ascending=False).to_csv('export/from_to_dep_pairs.csv', index=False)
+
+# %%
+
+df_deps[df_deps.to_dep.notnull()][['from_dep', 'to_dep']].to_csv('export/raw_from_to_dep.csv', index=False)
+# %%
+df_deps.no_dep.unique()
 
 # %%

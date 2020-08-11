@@ -165,3 +165,6 @@ df_deps.no_dep.unique()
 
 
 # %%
+df[df.apply(lambda r: r.isin([120]).any(), axis=1)].to_csv('export/protocols_with_120_deps.csv')
+
+# %%
